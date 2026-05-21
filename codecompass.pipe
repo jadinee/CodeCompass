@@ -1,0 +1,203 @@
+{
+  "components": [
+    {
+      "id": "webhook_1",
+      "provider": "webhook",
+      "config": {
+        "hideForm": true,
+        "mode": "Source",
+        "parameters": {},
+        "type": "webhook"
+      },
+      "ui": {
+        "position": {
+          "x": 24.869233399565033,
+          "y": 184.31607602921838
+        },
+        "measured": {
+          "width": 150,
+          "height": 160
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      }
+    },
+    {
+      "id": "parse_1",
+      "provider": "parse",
+      "config": {
+        "parameters": {}
+      },
+      "ui": {
+        "position": {
+          "x": 240,
+          "y": 200
+        },
+        "measured": {
+          "width": 150,
+          "height": 136
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "tags",
+          "from": "webhook_1"
+        }
+      ]
+    },
+    {
+      "id": "question_1",
+      "provider": "question",
+      "config": {
+        "parameters": {}
+      },
+      "ui": {
+        "position": {
+          "x": 460,
+          "y": 200
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "text",
+          "from": "parse_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_anthropic_1",
+      "provider": "llm_anthropic",
+      "config": {
+        "profile": "claude-sonnet-4-6",
+        "claude-sonnet-4-6": {
+          "apikey": "${ROCKETRIDE_ANTHROPIC_KEY}"
+        },
+        "parameters": {
+          "system": "You are a senior software engineer. Analyze the provided project code or description. Summarize what it does, its project type, complexity level (beginner/intermediate/advanced), languages, and frameworks used."
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 680,
+          "y": 200
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "question_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_anthropic_2",
+      "provider": "llm_anthropic",
+      "config": {
+        "profile": "claude-sonnet-4-6",
+        "claude-sonnet-4-6": {
+          "apikey": "${ROCKETRIDE_ANTHROPIC_KEY}"
+        },
+        "parameters": {
+          "system": "You are an expert coding educator. Given the project analysis, identify what the builder likely already understands and what concepts they probably have gaps in. Be specific to the technologies used."
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 900,
+          "y": 200
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "llm_anthropic_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_anthropic_3",
+      "provider": "llm_anthropic",
+      "config": {
+        "profile": "claude-sonnet-4-6",
+        "claude-sonnet-4-6": {
+          "apikey": "${ROCKETRIDE_ANTHROPIC_KEY}"
+        },
+        "parameters": {
+          "system": "You are CodeCompass, a warm AI mentor. Generate a personalized learning guide using this exact structure:\n\n**🧭 What You Built**\n[2-3 sentence description]\n\n**🛠️ Tech Stack**\n[list the technologies]\n\n**✅ You Likely Know**\n[list concepts they probably understand]\n\n**📚 Worth Learning More**\n[list their knowledge gaps with one sentence why each matters]\n\n**💡 Choose Your Path**\nA. [specific learning action]\nB. [specific learning action]\nC. [specific learning action]\nD. Ask your own question"
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 1120,
+          "y": 200
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "llm_anthropic_2"
+        }
+      ]
+    },
+    {
+      "id": "response_answers_1",
+      "provider": "response_answers",
+      "config": {
+        "laneName": "answers"
+      },
+      "ui": {
+        "position": {
+          "x": 1340,
+          "y": 200
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "llm_anthropic_3"
+        }
+      ]
+    }
+  ],
+  "project_id": "75a81803-2f20-40cb-abed-a5e5d3337f84",
+  "viewport": {
+    "x": 32.57557559574309,
+    "y": -83.64506845060396,
+    "zoom": 0.673225666165151
+  },
+  "version": 1,
+  "source": "webhook_1",
+  "docRevision": 3
+}
